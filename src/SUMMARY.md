@@ -13,6 +13,7 @@
 - [Milk-V Duo関係資料](milkv/README.md)
 
     - [ビルドメモ](milkv/linux.md)
+    - [U-Bootドキュメント](milkv/u-boot.md)
     - [genimage](milkv/genimage.md)
     - [ベアボーンおよび非ベアボーンアップグレードユーザーズマニュアル](milkv/barebone.md)
 
