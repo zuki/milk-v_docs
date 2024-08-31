@@ -1,0 +1,182 @@
+$ ./build_for_milkv_duo.sh 
+gcc -Werror -Wall -I. -o mkfs/mkfs mkfs/mkfs.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/ulib.o user/ulib.c
+perl user/usys.pl > user/usys.S
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie -c -o user/usys.o user/usys.S
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/printf.o user/printf.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/umalloc.o user/umalloc.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/strtoul.o user/strtoul.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/cat.o user/cat.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_cat user/cat.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_cat > user/cat.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_cat | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/cat.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/echo.o user/echo.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_echo user/echo.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_echo > user/echo.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_echo | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/echo.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/forktest.o user/forktest.c
+# forktest has less library code linked in - needs to be small
+# in order to be able to max out the proc table.
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -N -e main -Ttext 0 -o user/_forktest user/forktest.o user/ulib.o user/usys.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_forktest > user/forktest.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/grep.o user/grep.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_grep user/grep.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_grep > user/grep.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_grep | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/grep.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/init.o user/init.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_init user/init.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_init > user/init.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_init | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/init.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/kill.o user/kill.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_kill user/kill.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_kill > user/kill.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_kill | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/kill.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/ln.o user/ln.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_ln user/ln.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_ln > user/ln.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_ln | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/ln.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/ls.o user/ls.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_ls user/ls.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_ls > user/ls.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_ls | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/ls.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/mkdir.o user/mkdir.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_mkdir user/mkdir.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_mkdir > user/mkdir.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_mkdir | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/mkdir.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/rm.o user/rm.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_rm user/rm.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_rm > user/rm.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_rm | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/rm.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/sh.o user/sh.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_sh user/sh.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_sh > user/sh.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_sh | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/sh.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/stressfs.o user/stressfs.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_stressfs user/stressfs.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_stressfs > user/stressfs.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_stressfs | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/stressfs.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/usertests.o user/usertests.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_usertests user/usertests.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_usertests > user/usertests.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_usertests | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/usertests.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/grind.o user/grind.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_grind user/grind.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_grind > user/grind.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_grind | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/grind.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/wc.o user/wc.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_wc user/wc.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_wc > user/wc.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_wc | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/wc.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/zombie.o user/zombie.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_zombie user/zombie.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_zombie > user/zombie.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_zombie | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/zombie.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/blink.o user/blink.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_blink user/blink.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_blink > user/blink.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_blink | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/blink.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/pwm.o user/pwm.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_pwm user/pwm.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_pwm > user/pwm.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_pwm | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/pwm.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/adc.o user/adc.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_adc user/adc.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_adc > user/adc.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_adc | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/adc.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/i2c.o user/i2c.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_i2c user/i2c.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_i2c > user/i2c.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_i2c | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/i2c.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o user/spi.o user/spi.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T user/user.ld -o user/_spi user/spi.o user/ulib.o user/usys.o user/printf.o user/umalloc.o user/strtoul.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_spi > user/spi.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_spi | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/spi.sym
+mkfs/mkfs fs.img README user/_cat user/_echo user/_forktest user/_grep user/_init user/_kill user/_ln user/_ls user/_mkdir user/_rm user/_sh user/_stressfs user/_usertests user/_grind user/_wc user/_zombie user/_blink user/_pwm user/_adc user/_i2c user/_spi 
+nmeta 46 (boot, super, log blocks 30 inode blocks 13, bitmap blocks 1) blocks 1454 total 1500
+balloc: first 968 blocks have been allocated
+balloc: write bitmap block at sector 45
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/ramdisk_data.o kernel/ramdisk_data.S
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/entry.o kernel/entry.S
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/start.o kernel/start.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/console.o kernel/console.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/printf.o kernel/printf.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/uart.o kernel/uart.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/kalloc.o kernel/kalloc.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/spinlock.o kernel/spinlock.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/string.o kernel/string.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/main.o kernel/main.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/vm.o kernel/vm.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/proc.o kernel/proc.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/swtch.o kernel/swtch.S
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/trampoline.o kernel/trampoline.S
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/trap.o kernel/trap.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/syscall.o kernel/syscall.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/sysproc.o kernel/sysproc.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/bio.o kernel/bio.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/fs.o kernel/fs.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/log.o kernel/log.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/sleeplock.o kernel/sleeplock.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/file.o kernel/file.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/pipe.o kernel/pipe.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/exec.o kernel/exec.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/sysfile.o kernel/sysfile.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/kernelvec.o kernel/kernelvec.S
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/plic.o kernel/plic.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/sbi.o kernel/sbi.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/ramdisk.o kernel/ramdisk.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/gpio.o kernel/gpio.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/pwm.o kernel/pwm.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/adc.o kernel/adc.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/i2c.o kernel/i2c.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie   -c -o kernel/spi.o kernel/spi.c
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie -Wp,-MD,kernel/kernel.ld.d -E -P -C -o kernel/kernel.ld kernel/kernel.ld.S
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -march=rv64gc_zihintpause -Wall -Werror -Os -fno-omit-frame-pointer -ggdb -gdwarf-2 -MD -mcmodel=medany -ffreestanding -fno-common -nostdlib -mno-relax -I. -fno-stack-protector -fno-pie -no-pie -march=rv64g -nostdinc -I. -Ikernel -c user/initcode.S -o user/initcode.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -N -e start -Ttext 0 -o user/initcode.out user/initcode.o
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objcopy -S -O binary user/initcode.out user/initcode
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/initcode.o > user/initcode.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -z noexecstack --no-warn-rwx-segments -T kernel/kernel.ld -o kernel/kernel kernel/entry.o kernel/start.o kernel/console.o kernel/printf.o kernel/uart.o kernel/kalloc.o kernel/spinlock.o kernel/string.o kernel/main.o kernel/vm.o kernel/proc.o kernel/swtch.o kernel/trampoline.o kernel/trap.o kernel/syscall.o kernel/sysproc.o kernel/bio.o kernel/fs.o kernel/log.o kernel/sleeplock.o kernel/file.o kernel/pipe.o kernel/exec.o kernel/sysfile.o kernel/kernelvec.o kernel/plic.o kernel/sbi.o kernel/ramdisk.o kernel/ramdisk_data.o kernel/gpio.o kernel/pwm.o kernel/adc.o kernel/i2c.o kernel/spi.o 
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S kernel/kernel > kernel/kernel.asm
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t kernel/kernel | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > kernel/kernel.sym
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objcopy -O binary -R .note -R .comment -S kernel/kernel kernel/kernel.bin
+FIT description: Milk-V Duo SD
+Created:         Thu Aug 29 14:46:47 2024
+ Image 0 (kernel-1)
+  Description:  unavailable
+  Created:      Thu Aug 29 14:46:47 2024
+  Type:         Kernel Image
+  Compression:  uncompressed
+  Data Size:    1572864 Bytes = 1536.00 KiB = 1.50 MiB
+  Architecture: RISC-V
+  OS:           Linux
+  Load Address: 0x80200000
+  Entry Point:  0x80200000
+  Hash algo:    crc32
+  Hash value:   01ed09fa
+ Image 1 (fdt-1)
+  Description:  unavailable
+  Created:      Thu Aug 29 14:46:47 2024
+  Type:         Flat Device Tree
+  Compression:  uncompressed
+  Data Size:    3956 Bytes = 3.86 KiB = 0.00 MiB
+  Architecture: RISC-V
+  Hash algo:    sha256
+  Hash value:   6121854a8ee59c80da70f5d5ad8d054b2be713a2a8605de8275f03a3cca78e0b
+ Configuration 0 (config-cv1800b_milkv_duo_sd)
+  Description:  unavailable
+  Kernel:       kernel-1
+  FDT:          fdt-1
+xv6.cfg:22: no sub-section title/index for 'config'
+INFO: cmd: "mkdir -p "/tmp//genimage.tmp"" (stderr):
+INFO: cmd: "rm -rf "/tmp//genimage.tmp"/*" (stderr):
+INFO: cmd: "mkdir -p "/tmp//genimage.tmp"" (stderr):
+INFO: cmd: "cp -a "/tmp/tmp.xCL5Y5bNt4" "/tmp//genimage.tmp/root"" (stderr):
+INFO: cmd: "find '/tmp//genimage.tmp/root' -depth -type d -printf '%P\0' | xargs -0 -I {} touch -r '/tmp/tmp.xCL5Y5bNt4/{}' '/tmp//genimage.tmp/root/{}'" (stderr):
+INFO: cmd: "mkdir -p "/home/vagrant/xv6-xhack/duo-imgtools/"" (stderr):
+INFO: vfat(boot.vfat): cmd: "dd if=/dev/zero of="/home/vagrant/xv6-xhack/duo-imgtools//boot.vfat" seek=67108864 count=0 bs=1 2>/dev/null" (stderr):
+INFO: vfat(boot.vfat): cmd: "mkdosfs   '/home/vagrant/xv6-xhack/duo-imgtools//boot.vfat'" (stderr):
+INFO: vfat(boot.vfat): adding file 'fip.bin' as 'fip.bin' ...
+INFO: vfat(boot.vfat): cmd: "MTOOLS_SKIP_CHECK=1 mcopy -sp -i '/home/vagrant/xv6-xhack/duo-imgtools//boot.vfat' '/home/vagrant/xv6-xhack/duo-imgtools//fip.bin' '::'" (stderr):
+INFO: vfat(boot.vfat): adding file 'boot.sd' as 'boot.sd' ...
+INFO: vfat(boot.vfat): cmd: "MTOOLS_SKIP_CHECK=1 mcopy -sp -i '/home/vagrant/xv6-xhack/duo-imgtools//boot.vfat' '/home/vagrant/xv6-xhack/duo-imgtools//boot.sd' '::'" (stderr):
+INFO: hdimage(milkv-duo_sdcard.img): adding partition 'boot' (in MBR) from 'boot.vfat' ...
+INFO: hdimage(milkv-duo_sdcard.img): writing MBR

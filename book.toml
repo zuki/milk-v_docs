@@ -1,0 +1,9 @@
+[book]
+authors = ["SUZUKI Keiji"]
+multilingual = false
+src = "src"
+title = "Milk-V Duo用のXV6について"
+
+[output.html]
+default-theme = "rust"
+additional-css = ["theme/custom.css"]
