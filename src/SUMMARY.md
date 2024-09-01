@@ -14,6 +14,8 @@
 
     - [ビルドメモ](milkv/linux.md)
     - [U-Bootドキュメント](milkv/u-boot.md)
+    - [OpenSBI: Genericプラットフォーム](milkv/sbi_generic.md)
+    - [TF-Aドキュメント: FIP](milkv/tfa_fip.md)
     - [genimage](milkv/genimage.md)
     - [ベアボーンおよび非ベアボーンアップグレードユーザーズマニュアル](milkv/barebone.md)
 
