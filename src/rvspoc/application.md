@@ -3,13 +3,43 @@
 - virus-v (virusv), xhackerustc (xhack), BigBrotherJu (bbj) の3氏が応募
 - 3実装ともxv6が実機(Milk-V Duo)で問題なく稼働
 - 相違点
-  1. bbjはOpenSBI, u-bootの初期化画面が現れない
-  2. xhackは`fiptool.py`を使用していない
-    - 両者とも`duo-buildroot-sdk/fsbl/plat/cv180x/fiptool.py`と同じ
-  3. bbjはOpenSBIのライブラリ関数を使用していない
-    - xhackはSBI_TIME_SET_TIMERを使用
-    - virusvはSBI_TIME_SET_TIMER, SBI_CONSOLE_PUTCHAR, SBI_CONSOLE_GETCHARを使用
+  1. 起動時のOpenSBI, u-bootの初期化画面
+      - bbjは表示されない
+      - virusv, xhackは表示される
+  2. `fiptool.py`の使用
+      - xhackは使用していない
+      - bbj, virusvはともに`duo-buildroot-sdk/fsbl/plat/cv180x/fiptool.py`と同じソースを使用
+  3. `mkimage`の使用
+      - bbjは使用していない
+      - xhackは使用: `mkimage -f xv6.its boot.sd`
+      - virusvは使用: `mkimage -f ./multi.its -r ./boot.sd ./`
+  4. `genimage`の使用
+      - bbj
+        ```bash
+        genimage --config genimage.cfg --inputpath ../fip
+        ```
+      - xhack
+        ```bash
+        genimage --config xv6.cfg
+        ```
+      - virusv
+        ```bash
+        genimage --config genimage-milkv-duo.cfg
+        ```
+  4. OpenSBIライブラリ関数の使用
+      - bbjは使用していない
+      - xhackはSBI_TIME_SET_TIMERを使用
+      - virusvはSBI_TIME_SET_TIMER, SBI_CONSOLE_PUTCHAR, SBI_CONSOLE_GETCHARを使用
 
+| 開発者 | 表示 | fiptool | mkimage | genimage |
+|:-------|:----:|:-------:|:-------:|:--------:|
+| bbj    | ✕ | ◯ | ✕ | ◯ |
+| xhack  | ◯ | ✕ | ◯ | ◯ |
+| virusv | ◯ | ◯ | ◯ | ◯ |
+
+- **fiptool**:  Firmware Image Packageの作成
+- **mkimage**:  U-boot用imageを作成
+- **genimage**: パーティション作成
 
 ## #1/#3 virus-V氏
 
