@@ -110,7 +110,7 @@ Which would you like: 1
 ```bash
 $ ./build.sh lunch
 ...
- Run clean_uboot() function 
+ Run clean_uboot() function
   [TARGET] opensbi-clean
   [TARGET] rtos-clean
   [TARGET] fsbl-clean
@@ -129,25 +129,25 @@ $ ./build.sh lunch
   [TARGET] fsbl-build
   [TARGET] u-boot-dep
  Run build_kernel() function
-  [TARGET] /home/vagrant/duo-buildroot-sdk/linux_5.10/build/cv1800b_milkv_duo_sd/.config 
+  [TARGET] /home/vagrant/duo-buildroot-sdk/linux_5.10/build/cv1800b_milkv_duo_sd/.config
   [TARGET] kernel-build
   [TARGET] kernel
  Run pack_boot() function
   [TARGET] kernel-dts
   [TARGET] boot
- Run build_osdrv()  function 
+ Run build_osdrv()  function
  Run build_middleware() function
  Run pack_boot() function
   [TARGET] kernel-dts
   [TARGET] boot
  Run pack_cfg_sd() function
- Run pack_rootfs_sd() function 
+ Run pack_rootfs_sd() function
   [TARGET] br-rootfs-prepare
   [TARGET] br-rootfs-pack
  Run pack_data_sd() function
   [TARGET] jffs2
  Run pack_system_sd() function
-  [TARGET] sd_image 
+  [TARGET] sd_image
 ```
 
 ## [`build.sh`](build.sh.txt)
@@ -161,7 +161,7 @@ Model:  (file)
 Disk /home/vagrant/duo-buildroot-sdk/out/milkv-duo-sd-20240828-1520.img: 939524608B
 Sector size (logical/physical): 512B/512B
 Partition Table: msdos
-Disk Flags: 
+Disk Flags:
 
 Number  Start       End         Size        Type     File system  Flags
  1      512B        134218239B  134217728B  primary  fat16        boot, lba
@@ -171,7 +171,7 @@ $ mkdir mnt
 $ sudo mount -o ro,loop,offset=512 milkv-duo-sd-20240828-1520.img mnt/
 $ ls mnt/
 boot.sd  fip.bin
-$ file mnt/boot.sd 
+$ file mnt/boot.sd
 mnt/boot.sd: Device Tree Blob version 17, size=2981832, boot CPU=0, string block size=100, DT structure block size=2980744
 $ file mnt/fip.bin
 mnt/fip.bin: data
@@ -209,3 +209,5 @@ $ sudo umount mnt
 ```
 
 ## [ビルドログ](build_log.txt)
+
+## [実行ログ](linux_run_log.txt)
