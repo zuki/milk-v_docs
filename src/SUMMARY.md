@@ -13,11 +13,13 @@
 - [Milk-V Duo関係資料](milkv/README.md)
 
     - [ビルドメモ](milkv/linux.md)
+    - [fiptoolを試す](milkv/fiptool.md)
     - [U-Bootドキュメント](milkv/u-boot.md)
     - [OpenSBI: Genericプラットフォーム](milkv/sbi_generic.md)
     - [TF-Aドキュメント: FIP](milkv/tfa_fip.md)
     - [genimage](milkv/genimage.md)
     - [ベアボーンおよび非ベアボーンアップグレードユーザーズマニュアル](milkv/barebone.md)
+    - [RISC-V Linuxのブートイメージヘッダ](milkv/boot_img_header.md)
 
 - [Web上の情報](articles/README.md)
 
