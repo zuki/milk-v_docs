@@ -114,6 +114,29 @@ PATH=$PATH:/sbin
 rm output/* -f
 ./makeimg.sh && echo -e "${RED}generated milkv-duo.img${RESET}"
 
+/* port/image/genimage.cfg
+image boot.vfat {
+	vfat {
+		label = "boot"
+		files = {
+			"fip.bin",
+		}
+	}
+	size = 10M
+}
+
+image milkv-duo.img {
+	hdimage {
+	}
+
+	partition boot {
+		partition-type = 0xC
+		bootable = "true"
+		image = "boot.vfat"
+	}
+
+}
+*/
 #sudo dd if=output/milkv-duo.img of=$1 status=progress &&
 #sync && echo -e "${RED}sd card burnt${RESET}"
 ```
@@ -456,3 +479,114 @@ OK
 ALL TESTS PASSED
 $
 ```
+
+# `bl33.bin`を作成して`milkv-duo.img`を再作成
+
+"OpenSBIを使って自作OSを起動する"にしたがい`bl33`を作成し、`port/fip/bl33.bin`を置き換えて
+`milkv-duo.img`を再作成する。
+
+```bash
+$ vi start.S
+$ cat start.S
+    .section .text
+    .global _start
+_start:
+    /* BL33 information */
+    j real_start
+    .balign 4
+    .word 0x33334c42  /* b'BL33' */
+    .word 0xdeadbeea  /* CKSUM */
+    .word 0xdeadbeeb  /* SIZE */
+    .quad 0x80500000  /* RUNADDR */
+    .word 0xdeadbeec
+    .balign 4
+    j real_start
+    .balign 4
+    /* BL33 end */
+real_start:
+$ ~/riscv-gnu-toolchain/bin/riscv64-unknown-elf-gcc -nostdlib -fno-builtin -march=rv64gc -mabi=lp64f -g -Wall -Ttext=0x80200000 -o bl33.elf start.S
+$ ~/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objcopy -O binary bl33.elf bl33.bin
+$ xxd bl33.bin
+00000000: 05a0 0100 424c 3333 eabe adde ebbe adde  ....BL33........
+00000010: 0000 5080 0000 0000 ecbe adde 11a0 0100  ..P.............
+$ cp xv6-bbj/port/fip/bl33.bin xv6-bbj/port/fip/bl33.bin.org
+$ cp bl33.bin xv6-bbj/port/fip/
+$ cd xv6-bbj
+$ ./script
+# port/image/out/milkv-duo.img をSDカードに
+$ minicom
+C.SCS/0/0.WD.URPL.SDI/25000000/6000000.BS/SD.PS.SD/0x0/0x1000/0x1000/0.PE.BS.SD.
+FSBL Jb28g9:gf91cf4331-dirty:2024-03-01T11:06:19+08:00
+st_on_reason=d0000
+st_off_reason=0
+P2S/0x1000/0x3bc0dc00.
+SD/0xcc00/0x1000/0x1000/0.P2E.
+DPS/0xdc00/0x2000.
+SD/0xdc00/0x2000/0x2000/0.DPE.
+DDR init.
+ddr_param[0]=0x78075562.
+pkg_type=3
+D3_1_4
+DDR2-512M-QFN68
+Data rate=1333.
+DDR BIST PASS
+PLLS.
+PLLE.
+C2S/0x0/0x0/0x0.
+No C906L image.
+MS/0xfc00/0x80000000/0x1fde00.
+SD/0xfc00/0x1fde00/0x1fde00/0.ME.
+L2/0x20da00.
+SD/0x20da00/0x200/0x200/0.L2/0x414d3342/0xcafe5f0b/0x80500000/0x200/0x200
+COMP/1.
+SD/0x20da00/0x200/0x200/0.DCP/0x80500020/0x1000000/0x81500020/0x200/1.
+DCP/0x0/0.
+Loader_2nd loaded.
+Use internal 32k
+Jump to monitor at 0x80000000.
+OPENSBI: next_addr=0x80500020 arg1=0x80080000
+
+This system is ported by OStar Team.
+xv6 kernel is booting on hart 0
+
+pll_g6_ctrl:   0 0x0000000000000000
+pll_g6_status: 70000 0x0000000000070000
+fpll_csr:      7788101 0x0000000007788101
+pll_g6_ssc_syn_ctrl: 2 0x0000000000000002
+clk_en_0:      -1 0xffffffffffffffff
+clk_en_1:      -1 0xffffffffffffffff
+clk_en_2:      -1 0xffffffffffffffff
+clk_en_3:      -1 0xffffffffffffffff
+clk_en_4:      -1 0xffffffffffffffff
+clk_byp_0:     0 0x0000000000000000
+div_clk_axi6:  1 0x0000000000000001
+div_clk_i2c:   1 0x0000000000000001
+div_clk_pwm_src_0: f0009 0x00000000000f0009
+div_clk_gpio_db: 1 0x0000000000000001
+div_clk_spi: 1 0x0000000000000001
+
+Initialized physical page allocator
+Created kernel page table
+Turned on paging
+Initialized process table
+Installed kernel trap vector
+Set up interrupt controller
+Set up buffer cache
+Set up inode table
+Set up file table
+Initialized disk
+Initialized i2c controller
+Initialized uart controller
+Initialized adc controller
+Initialized pwm controller
+Initialized gpio controller
+Initialized spi controller
+init: starting sh
+$ ls
+.              1 1 1024
+..             1 1 1024
+README         2 2 2305
+...
+```
+
+オリジナル同様、問題なく動いた。
