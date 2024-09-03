@@ -41,6 +41,31 @@
 - **mkimage**:  U-boot用imageを作成
 - **genimage**: パーティション作成
 
+- **fiptool.py**のオプション
+
+| タグ | bbj | virusv | linux |
+|:------|------|--------|---------:|
+| param1 | | | |
+| MAGIC1  | CVBL01\n\0 | CVBL01\n\0 | CVBL01\n\0 |
+| NAND_INFO  | 0 | 0 | 0 |
+| NOR_INFO  | 0xff | 0xff | 0xff |
+| BLCP_IMG_RUNADDR  | 0x0520_0200 | 0x0520_0200 | 0x520_0200 |
+| BLCP_PARAM_LOADADDR  | 0 | 0 | 0 |
+| CHIP_CONF  | chip_conf.bin | chip_conf.bin | chip_conf.bin |
+| body1 |  |  |  |
+| BLCP  | empty.bin | empty.bin | empty.bin |
+| BL2  | <font color="red">bl2_debug.bin</font> | bl2.bin | bl2.bin |
+| BLCP_2ND |  |  |  |
+| BLCP_2ND_RUNADDR  | 0x83f4_0000 | 0x83f4_0000 | 0x0x83F4_0000 |
+| ATF-BL31 or OpenSBI |  |  |  |
+| MONITOR_RUNADDR  | 0x8000_0000 | 0x8000_0000 | 0x800_00000 |
+| body2 |  |  |  |
+| DDR_PARAM  | - | ddr_param.bin | ddr_param.bin |
+| BLCP_2ND  | - | cvirtos.bin | cvirtos.bin |
+| MONITOR  | <font color="red">kernel/kernel.bin</font> | <font color="blue">fw_dynamic.bin</font> | <font color="blue">fw_dynamic.bin</font> |
+| LOADER_2ND  | <font color="red">bl33.bin</font> | <font color="blue">u-boot-raw.bin</font> | <font color="blue">u-boot-raw.bin</font> |
+| compress  | lzma | lzma | lzma |
+
 ## #1/#3 virus-V氏
 
 チーム: IEEE 80211チーム
