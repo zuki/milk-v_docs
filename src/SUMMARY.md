@@ -13,7 +13,9 @@
 - [Milk-V Duo関係資料](milkv/README.md)
 
     - [ビルドメモ](milkv/linux.md)
+    - [fip_binについて](milkv/fip_bin.md)
     - [fiptoolを試す](milkv/fiptool.md)
+    - [u-bootのbootmコマンド定義](milkv/bootm.md)
     - [U-Bootドキュメント](milkv/u-boot.md)
     - [OpenSBI: Genericプラットフォーム](milkv/sbi_generic.md)
     - [TF-Aドキュメント: FIP](milkv/tfa_fip.md)
