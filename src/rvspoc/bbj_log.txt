@@ -1,4 +1,4 @@
-$ ./script 
+$ ./script
 rm -f *.tex *.dvi *.idx *.aux *.log *.ind *.ilg \
 */*.o */*.d */*.asm */*.sym \
 user/initcode user/initcode.out kernel/kernel fs.img \
@@ -110,7 +110,7 @@ perl user/usys.pl > user/usys.S
 /home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -T user/user.ld -o user/_spitest user/spitest.o user/ulib.o user/usys.o user/printf.o user/umalloc.o
 /home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/_spitest > user/spitest.asm
 /home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t user/_spitest | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > user/spitest.sym
-mkfs/mkfs fs.img README user/_cat user/_echo user/_forktest user/_grep user/_init user/_kill user/_ln user/_ls user/_mkdir user/_rm user/_sh user/_stressfs user/_usertests user/_grind user/_wc user/_zombie user/_sleep user/_uptime user/_i2ctest user/_uarttest user/_adctest user/_pwmtest user/_gpiotest user/_spitest 
+mkfs/mkfs fs.img README user/_cat user/_echo user/_forktest user/_grep user/_init user/_kill user/_ln user/_ls user/_mkdir user/_rm user/_sh user/_stressfs user/_usertests user/_grind user/_wc user/_zombie user/_sleep user/_uptime user/_i2ctest user/_uarttest user/_adctest user/_pwmtest user/_gpiotest user/_spitest
 nmeta 46 (boot, super, log blocks 30 inode blocks 13, bitmap blocks 1) blocks 1954 total 2000
 balloc: first 1021 blocks have been allocated
 balloc: write bitmap block at sector 45
@@ -154,7 +154,7 @@ xxd -i fs.img > kernel/ramdisk.h
 /home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld: warning: user/initcode.out has a LOAD segment with RWX permissions
 /home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objcopy -S -O binary user/initcode.out user/initcode
 /home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S user/initcode.o > user/initcode.asm
-/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -T kernel/kernel.ld -o kernel/kernel kernel/entry.o kernel/start.o kernel/console.o kernel/printf.o kernel/uart.o kernel/kalloc.o kernel/spinlock.o kernel/string.o kernel/main.o kernel/vm.o kernel/proc.o kernel/swtch.o kernel/trampoline.o kernel/trap.o kernel/syscall.o kernel/sysproc.o kernel/bio.o kernel/fs.o kernel/log.o kernel/sleeplock.o kernel/file.o kernel/pipe.o kernel/exec.o kernel/sysfile.o kernel/kernelvec.o kernel/plic.o kernel/ramdisk.o kernel/i2c_designware.o kernel/i2c_dev.o kernel/uart_dev.o kernel/adc_dev.o kernel/pwm_dev.o kernel/gpio_dev.o kernel/spi_dev.o  
+/home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld -z max-page-size=4096 -T kernel/kernel.ld -o kernel/kernel kernel/entry.o kernel/start.o kernel/console.o kernel/printf.o kernel/uart.o kernel/kalloc.o kernel/spinlock.o kernel/string.o kernel/main.o kernel/vm.o kernel/proc.o kernel/swtch.o kernel/trampoline.o kernel/trap.o kernel/syscall.o kernel/sysproc.o kernel/bio.o kernel/fs.o kernel/log.o kernel/sleeplock.o kernel/file.o kernel/pipe.o kernel/exec.o kernel/sysfile.o kernel/kernelvec.o kernel/plic.o kernel/ramdisk.o kernel/i2c_designware.o kernel/i2c_dev.o kernel/uart_dev.o kernel/adc_dev.o kernel/pwm_dev.o kernel/gpio_dev.o kernel/spi_dev.o
 /home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-ld: warning: kernel/kernel has a LOAD segment with RWX permissions
 /home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -S kernel/kernel > kernel/kernel.asm
 /home/vagrant/riscv-gnu-toolchain/bin/riscv64-unknown-elf-objdump -t kernel/kernel | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$/d' > kernel/kernel.sym
@@ -182,28 +182,32 @@ DEBUG:root:  func=<function generate_fip at 0x7f695efc5870>
 DEBUG:root:  output='fip.bin'
 DEBUG:root:  subcmd='genfip'
 DEBUG:root:  verbose=10
+
 DEBUG:root:generate_fip:
 DEBUG:root:add_nor_info:
 DEBUG:root:add_nand_info:
 DEBUG:root:add_chip_conf:
 DEBUG:root:add_blcp:
 DEBUG:root:add_bl2:
-DEBUG:root:ddr_param=0x2000 bytes
-DEBUG:root:blcp_2nd=0x0 bytes
-DEBUG:root:monitor=0x1fdd80 bytes
-DEBUG:root:loader_2nd=0x20 bytes
+DEBUG:root:ddr_param=0x2000 bytes   // add_ddr_param()
+DEBUG:root:blcp_2nd=0x0 bytes       // add_blcp_2nd()
+DEBUG:root:monitor=0x1fdd80 bytes   // add_monitor()
+DEBUG:root:loader_2nd=0x20 bytes    // add_loader_2nd()
+
 DEBUG:root:make_fip1:
 INFO:root:add BLCP (0x0)
 INFO:root:add BL2 (0xbc00)
-DEBUG:root:len(body1_bin) is 48128
-DEBUG:root:len(fip1_bin) is 52224
+DEBUG:root:len(body1_bin) is 48128  // 0x + 0xbc00
+DEBUG:root:len(fip1_bin) is 52224   // body1_bin + param1 (4096)
+
 DEBUG:root:make_fip2:
 DEBUG:root:pack_monitor:
 DEBUG:root:pack_loader_2nd:
 INFO:root:lzma loader_2nd=0x17 bytes wo header
 DEBUG:root:len(param2_bin) is 4096
 INFO:root:generated fip_bin is 2153472 bytes
-INFO:root:print(param1):
+
+INFO:root:print(param1):    // print_fip_parasm()で出力
 [   <MAGIC1: a=0x0 s=0x8 c=0xa31304c425643 <class 'int'>>,
     <MAGIC2: a=0x8 s=0x4 c=0x000000 <class 'int'>>,
     <PARAM_CKSUM: a=0xc s=0x4 c=0xcafe26d8 <class 'int'>>,
@@ -252,7 +256,7 @@ INFO:root:print(param2):
     <RESERVED_LAST: a=0x50 s=0xfb0 c=00000000000000000000000000000000... <class 'bytes'>>]
 INFO:root:print(ldr_2nd_hdr):
 [   <JUMP0: a=0x0 s=0x4 c=0x01a005 <class 'int'>>,
-    <MAGIC: a=0x4 s=0x4 c=0x414d3342 <class 'int'>>,
+    <MAGIC: a=0x4 s=0x4 c=0x414d3342 <class 'int'>>,    // "B3MA"
     <CKSUM: a=0x8 s=0x4 c=0xcafe5f0b <class 'int'>>,
     <SIZE: a=0xc s=0x4 c=0x000200 <class 'int'>>,
     <RUNADDR: a=0x10 s=0x8 c=0x80500000 <class 'int'>>,
@@ -274,4 +278,3 @@ INFO: hdimage(milkv-duo.img): adding partition 'boot' (in MBR) from 'boot.vfat' 
 INFO: hdimage(milkv-duo.img): writing MBR
 INFO: cmd: "rm -rf "/home/vagrant/xv6-bbj/port/image/tmp"/*" (stderr):
 generated milkv-duo.img
-
