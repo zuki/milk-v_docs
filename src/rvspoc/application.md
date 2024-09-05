@@ -26,7 +26,7 @@
         ```bash
         genimage --config genimage-milkv-duo.cfg
         ```
-  4. OpenSBIライブラリ関数の使用
+  5. OpenSBIライブラリ関数の使用
       - bbjは使用していない
       - xhackはSBI_TIME_SET_TIMERを使用
       - virusvはSBI_TIME_SET_TIMER, SBI_CONSOLE_PUTCHAR, SBI_CONSOLE_GETCHARを使用
@@ -36,17 +36,15 @@
 | bbj    | ✕ | ◯ | ✕ | ◯ |
 | xhack  | ◯ | ✕ | ◯ | ◯ |
 | virusv | ◯ | ◯ | ◯ | ◯ |
+  - **fiptool**:  Firmware Image Packageの作成
+  - **mkimage**:  U-boot用imageを作成
+  - **genimage**: パーティション作成
 
-- **fiptool**:  Firmware Image Packageの作成
-- **mkimage**:  U-boot用imageを作成
-- **genimage**: パーティション作成
-
-- **fiptool.py**のオプション
-
-**param1/body1**
+  6.  **fiptool.py**のオプション
 
 | タグ | bbj | virusv | linux |
-|:------|------|--------|---------:|
+|:------|:-----|:-------|---------:|
+<font color="green">param1/body1</font>
 | **_NAND_INFO_**  | 0 | 0 | 0 |
 | **_NOR_INFO_**  | 0xff | 0xff | 0xff |
 | _BLCP_IMG_RUNADDR_  | 0x0520_0200 | 0x0520_0200 | 0x520_0200 |
@@ -54,11 +52,7 @@
 | **_CHIP_CONF_**  | chip_conf.bin | chip_conf.bin | chip_conf.bin |
 | **BLCP**  | empty.bin | empty.bin | empty.bin |
 | **BL2**  | <font color="red">bl2_debug.bin</font> | bl2.bin | bl2.bin |
-
-**param2/body2**
-
-| タグ | bbj | virusv | linux |
-|:------|------|--------|---------:|
+<font color="green">**param2/body2**</font>
 | _BLCP_2ND_RUNADDR_  | 0x83f4_0000 | 0x83f4_0000 | 0x0x83F4_0000 |
 | _MONITOR_RUNADDR_  | 0x8000_0000 | 0x8000_0000 | 0x800_00000 |
 | **DDR_PARAM**  | - | ddr_param.bin | ddr_param.bin |
@@ -66,10 +60,17 @@
 | **MONITOR**  | <font color="red">kernel/kernel.bin</font> | <font color="blue">fw_dynamic.bin</font> | <font color="blue">fw_dynamic.bin</font> |
 | **LOADER_2ND**  | <font color="red">bl33.bin</font> | <font color="blue">u-boot-raw.bin</font> | <font color="blue">u-boot-raw.bin</font> |
 | _compress_  | lzma | lzma | lzma |
+<font color="green">注記:</font>
+  - 太字のタグはbody（指定のパスからファイルを読み込む）
+  - イタリック体のタグはパラメタ（指定の値をそのまま使用）
+  - 太字イタリック体のタグはパラメタで、処理が必要
 
-* 太字のタグはbody（指定のパスからファイルを読み込む）
-* イタリック体のタグはパラメタ（指定の値をそのまま使用）
-* 太字イタリック体のタグはパラメタで、処理が必要
+  7. SDカード割当
+
+| タグ | bbj | xhack | virusv |
+|:-----|:----|:------|:-------|
+| partiion 1 | fip.bin | fip.bin<br/>boot.sd | fip.bin<br/>boot.sd |
+| boot.sd | - | kernel.bin<br/>cv1800b-milkv-duo.dtb | kernel.bin.lzma<br/>fs.img<br/>cv1800b_milkv_duo_sd.dtb |
 
 ## #1/#3 virus-V氏
 

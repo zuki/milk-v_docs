@@ -6,8 +6,186 @@
 setenv bootargs ${reserved_mem} ${root} ${mtdparts} console=$consoledev,$baudrate $othbootargs;
 echo Boot from SD ...;
 mmc dev 0 && fatload mmc 0 ${uImage_addr} boot.sd;
-bootm ${uImage_addr}#config-;
+bootm ${uImage_addr}#config-cv1800b_milkv_duo_sd;
 fi;
+```
+
+- `config-cv1800b_milkv_duo_sd`: mkimageで-fで指定する*.itsファイルで定義したconfigurations名
+- `${uImage_addr}`: UIMAG_ADDR = CVIMMAP_UIMAG_ADDR = 0x81400000
+- bootmコマンドの詳細については[bootコマンド](file:///Users/dspace/pine64/docs/book/uboot/commands/bootm.html)を参照
+
+## xv6-virusvで実行
+
+```bash
+# milkv-duo.imgをSDに焼く
+$ mv /Volume/boot/boot.sd /Volume/boot/boot.sd.org	# u-bootで止めるため
+$ minicom
+# 以下はfip.binが実行されている
+
+C.SCS/0/0.WD.URPL.SDI/25000000/6000000.BS/SD.PS.SD/0x0/0x1000/0x1000/0.PE.BS.SD.
+FSBL Jb28g9:gd1d59d9af-dirty:2023-12-22T16:12:06+08:00
+st_on_reason=d0000
+st_off_reason=0
+P2S/0x1000/0x3bc0da00.
+SD/0xca00/0x1000/0x1000/0.P2E.
+DPS/0xda00/0x2000.
+SD/0xda00/0x2000/0x2000/0.DPE.
+DDR init.
+ddr_param[0]=0x78075562.
+pkg_type=3
+D3_1_4
+DDR2-512M-QFN68
+DDR BIST PASS
+PLLS.
+PLLE.
+C2S/0xfa00/0x83f40000/0x3600.
+ 2RET.:00/0x3600/0x3600/0.RSC.
+[M1S./307x61834030]0P/r0ex 8s0y0s0t0e0m0 0i/n0ixt1 bd0o0n0e.
+
+RT: [1.383163]CVIRTOS Build Date:Dec 20 2023  (Time :17:25:52)
+RT: [1.389166]Post system init done
+RT: [1.392481]create cvi task
+RT: [1.395307][cvi_spinlock_init] succeess
+RT: [1.399202]prvCmdQuRunTask run
+SD/0x13000/0x1b000/0x1b000/0.ME.
+L2/0x2e000.
+SD/0x2e000/0x200/0x200/0.L2/0x414d3342/0xcafeb9d6/0x80200000/0x1f800/0x1f800
+COMP/1.
+SD/0x2e000/0x1f800/0x1f800/0.DCP/0x80200020/0x1000000/0x81500020/0x1f800/1.
+DCP/0x425e9/0.
+Loader_2nd loaded.
+Use internal 32k
+Jump to monitor at 0x80000000.
+OPENSBI: next_addr=0x80200020 arg1=0x80080000
+OpenSBI v0.9
+   ____                    _____ ____ _____
+  / __ \                  / ____|  _ \_   _|
+ | |  | |_ __   ___ _ __ | (___ | |_) || |
+ | |  | | '_ \ / _ \ '_ \ \___ \|  _ < | |
+ | |__| | |_) |  __/ | | |____) | |_) || |_
+  \____/| .__/ \___|_| |_|_____/|____/_____|
+        | |
+        |_|
+
+Platform Name             : Cvitek. CV180X ASIC. C906.
+Platform Features         : mfdeleg
+Platform HART Count       : 1
+Platform IPI Device       : clint
+Platform Timer Device     : clint
+Platform Console Device   : uart8250
+Platform HSM Device       : ---
+Platform SysReset Device  : ---
+Firmware Base             : 0x80000000
+Firmware Size             : 132 KB
+Runtime SBI Version       : 0.3
+
+Domain0 Name              : root
+Domain0 Boot HART         : 0
+Domain0 HARTs             : 0*
+Domain0 Region00          : 0x0000000074000000-0x000000007400ffff (I)
+Domain0 Region01          : 0x0000000080000000-0x000000008003ffff ()
+Domain0 Region02          : 0x0000000000000000-0xffffffffffffffff (R,W,X)
+Domain0 Next Address      : 0x0000000080200020
+Domain0 Next Arg1         : 0x0000000080080000
+Domain0 Next Mode         : S-mode
+Domain0 SysReset          : yes
+
+Boot HART ID              : 0
+Boot HART Domain          : root
+Boot HART ISA             : rv64imafdcvsux
+Boot HART Features        : scounteren,mcounteren,time
+Boot HART PMP Count       : 16
+Boot HART PMP Granularity : 4096
+Boot HART PMP Address Bits: 38
+Boot HART MHPM Count      : 8
+Boot HART MHPM Count      : 8
+Boot HART MIDELEG         : 0x0000000000000222
+Boot HART MEDELEG         : 0x000000000000b109
+
+
+U-Boot 2021.10 (Dec 20 2023 - 17:25:42 +0800)cvitek_cv180x
+
+DRAM:  63.3 MiB
+gd->relocaddr=0x83f02000. offset=0x3d02000
+MMC:   cv-sd@4310000: 0
+Loading Environment from <NULL>... OK
+In:    serial
+Out:   serial
+Err:   serial
+Net:
+Warning: ethernet@4070000 (eth0) using random MAC address - 26:96:f5:f7:d2:d1
+eth0: ethernet@4070000
+Hit any key to stop autoboot:  0
+Boot from SD ...
+switch to partitions #0, OK
+mmc0 is current device
+** Unable to read file boot.sd **
+Failed to load 'boot.sd'		# fatload mmc 0 ${uImage_addr} boot.sdでエラー
+cv180x_c906#					# bootの処理が停止してコマンドプロントが現れる
+
+cv180x_c906# printenv
+baudrate=115200
+bootargs=root=/dev/mmcblk0p2 rootwait rw console=ttyS0,115200 earlycon=sbi logl0
+bootcmd=run sdboot
+bootdelay=1
+consoledev=ttyS0
+fdtcontroladdr=836bbe70
+gatewayip=192.168.0.11
+ipaddr=192.168.0.3
+netdev=eth0
+netmask=255.255.255.0
+othbootargs=earlycon=sbi loglevel=9 riscv.fwsz=0x80000
+root=root=/dev/mmcblk0p2 rootwait rw
+sdboot=setenv bootargs ${root} ${mtdparts} console=$consoledev,$baudrate $othbo;
+serverip=192.168.56.101
+stderr=serial
+stdin=serial
+stdout=serial
+uImage_addr=0x81400000
+update_addr=0x83f40000
+
+Environment size: 708/131068 bytes
+
+# boot.sd.orgを指定してsdbootをやり直す
+# 1. boot.sd.orgのロード
+cv180x_c906# mmc dev 0 && fatload mmc 0 ${uImage_addr} boot.sd.org
+switch to partitions #0, OK
+mmc0 is current device
+2087112 bytes read in 95 ms (21 MiB/s)
+# 2. boot.sd.orgの実行
+cv180x_c906# bootm ${uImage_addr}#config-cv1800b_milkv_duo_sd
+## Loading kernel from FIT Image at 81400000 ...
+   Using 'config-cv1800b_milkv_duo_sd' configuration
+   Trying 'kernel-1' kernel subimage
+   Verifying Hash Integrity ... crc32+ OK
+## Loading ramdisk from FIT Image at 81400000 ...
+   Using 'config-cv1800b_milkv_duo_sd' configuration
+   Trying 'ramdisk-1' ramdisk subimage
+   Verifying Hash Integrity ... crc32+ OK
+   Loading ramdisk from 0x814046d4 to 0x80280000
+## Loading fdt from FIT Image at 81400000 ...
+   Using 'config-cv1800b_milkv_duo_sd' configuration
+   Trying 'fdt-cv1800b_milkv_duo_sd' fdt subimage
+   Verifying Hash Integrity ... sha256+ OK
+   Booting using the fdt blob at 0x815f87d4
+   Uncompressing Kernel Image
+   Decompressing 39452 bytes used 6ms
+   Loading Ramdisk to 834c6000, end 836ba000 ... OK
+   Loading Device Tree to 00000000834be000, end 00000000834c5b80 ... OK
+
+Starting kernel ...
+
+
+xv6 kernel is booting
+
+helloworld! IEEE80211 TEAM
+SPI CTRLR0: 0x7
+init: starting sh
+$ ls
+.              1 1 1024
+..             1 1 1024
+README         2 2 2305
+...
 ```
 
 ## `duo-buildroot-sdk/u-boot-2021.10/include/configs/cv180x-asic.h`
@@ -148,7 +326,7 @@ fi;
 /* 共通envの定義 */
 /*******************************************************************************/
 	/* Config FDT_NO */
-	#define FDT_NO ""
+	#define FDT_NO __stringify(CVICHIP) "_" __stringify(CVIBOARD)
 
 	/* config root */
 	#define ROOTARGS "rootfstype=squashfs rootwait ro root=" ROOTFS_DEV

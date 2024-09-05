@@ -1,5 +1,21 @@
 # fip_binについて
 
+## 起動プロセス
+
+1. ZSBL (Zero stage Boot Loader): ROM内にあり非公開
+2. FSBL (First Stage Boot Loader)
+    - 2.1 bl2.bin
+3. SSBL (Send Stage Boot Loader)
+    - 3.1 u-boot-raw.bin: xv6-xhack, xv6-virusv
+    - 3.2 bl33.bin: xv6-bbj
+4. Monitor
+    - 4.1 fw_dynamic.bin: xv6-xhack, xv6-virusv
+    - 4.2 kernel.bin: xv6-bbj
+5. カーネル: boot.sd
+    - xv6-xhack, xv6-virusv
+
+4項までがfip.bin。5項のboot.sdはu-bootから実行される。
+
 ## セカンドローダ
 
 - u-boot-raw.bin
