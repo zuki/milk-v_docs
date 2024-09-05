@@ -31,6 +31,10 @@
       - xhackはSBI_TIME_SET_TIMERを使用
       - virusvはSBI_TIME_SET_TIMER, SBI_CONSOLE_PUTCHAR, SBI_CONSOLE_GETCHARを使用
 
+## 相違点のまとめ
+
+### 1. ツールの使用
+
 | 開発者 | 表示 | fiptool | mkimage | genimage |
 |:-------|:----:|:-------:|:-------:|:--------:|
 | bbj    | ✕ | ◯ | ✕ | ◯ |
@@ -40,10 +44,10 @@
   - **mkimage**:  U-boot用imageを作成
   - **genimage**: パーティション作成
 
-  6.  **fiptool.py**のオプション
+### 2. `fiptool.py`のオプション
 
 | タグ | bbj | virusv | linux |
-|:------|:-----|:-------|---------:|
+|:------|:-----|:-------|:--------|
 <font color="green">param1/body1</font>
 | **_NAND_INFO_**  | 0 | 0 | 0 |
 | **_NOR_INFO_**  | 0xff | 0xff | 0xff |
@@ -55,8 +59,8 @@
 <font color="green">**param2/body2**</font>
 | _BLCP_2ND_RUNADDR_  | 0x83f4_0000 | 0x83f4_0000 | 0x0x83F4_0000 |
 | _MONITOR_RUNADDR_  | 0x8000_0000 | 0x8000_0000 | 0x800_00000 |
-| **DDR_PARAM**  | - | ddr_param.bin | ddr_param.bin |
-| **BLCP_2ND**  | - | cvirtos.bin | cvirtos.bin |
+| **DDR_PARAM**  | ddr_param.bin | ddr_param.bin | ddr_param.bin |
+| **BLCP_2ND**  | empty.bin | cvirtos.bin | cvirtos.bin |
 | **MONITOR**  | <font color="red">kernel/kernel.bin</font> | <font color="blue">fw_dynamic.bin</font> | <font color="blue">fw_dynamic.bin</font> |
 | **LOADER_2ND**  | <font color="red">bl33.bin</font> | <font color="blue">u-boot-raw.bin</font> | <font color="blue">u-boot-raw.bin</font> |
 | _compress_  | lzma | lzma | lzma |
@@ -65,22 +69,25 @@
   - イタリック体のタグはパラメタ（指定の値をそのまま使用）
   - 太字イタリック体のタグはパラメタで、処理が必要
 
-  7. SDカード割当
+### 3. SDカードのパーティションとboot.sdの内容
 
 | タグ | bbj | xhack | virusv |
 |:-----|:----|:------|:-------|
 | partiion 1 | fip.bin | fip.bin<br/>boot.sd | fip.bin<br/>boot.sd |
+| partiion 2 | - | - | - |
 | boot.sd | - | kernel.bin<br/>cv1800b-milkv-duo.dtb | kernel.bin.lzma<br/>fs.img<br/>cv1800b_milkv_duo_sd.dtb |
 
-## #1/#3 virus-V氏
+## 各氏の提出物説明と主催者からの質問とその回答
+
+### #1/#3 virus-V氏
 
 チーム: IEEE 80211チーム
 
 1. XuanTieによるGCCツールチェーン: Xuantie-900 elf newlib gcc Toolchain V2.6.1 B-20220906
 2. `make duo`コマンドを実行すると`vendor/milkv-duo/images/milkv-duo.img`イメージが自動的にビルドされる。
-    1. プロジェクトで使用するelfとbinは公式のduo-buildroot-sdkにある。
+    1. プロジェクトで使用するelfとbinは公式のduo-buildroot-sdkにあるもの。
     1. mkimage実行ファイルは`u-boot-2021.10/tools/mkimage.c`からコンパイルされる。
-    1. fip_prebuiltディレクトリのbinは`fiptool.py`がduo-buildroot-sdkをビルドする際に使用する
+    1. fip_prebuiltディレクトリのbinは`fiptool.py`がduo-buildroot-sdkをビルドする際に使用した
        binをそのままコピーしたものである。
     1. gen_fip.shはfip.binを、gen_bootsd.shはboot.sdを、gen_images.shはmilkv-duo.imgを生成する。
 
@@ -88,7 +95,7 @@
 
 ![milk-v duoのraw disk image](raw_disk_image.png)
 
-### 回答1
+#### 回答1
 
 Userlandにgpiotest, pwmtest, spilcdtestテストルーチンを追加した。xv6を起動後に
 
@@ -97,7 +104,7 @@ Userlandにgpiotest, pwmtest, spilcdtestテストルーチンを追加した。x
 3. spilcdtestルーチンの実装では、SPI2_SCK、SPI2_TXピンでSPI信号出力を見ることができる。
 4. I2Cドライバにはテストルーチンはなく、移植されたドライバだけである。
 
-## #2 xhackerustc氏
+### #2 xhackerustc氏
 
 xv6をMilkv DuoなどのSophgo CV1800Bプラットフォーム、Milkv-duo256、milkv Duo-SなどのSophgo SG00X
 プラットフォーム、Sipeed Lichee Pi 4AなどのT-HEAD TH1520プラットフォームに移植した。Milkv Duoは
@@ -107,7 +114,7 @@ xv6をMilkv DuoなどのSophgo CV1800Bプラットフォーム、Milkv-duo256、
 QemuとTH1520はuartしかサポートしていない。ペリフェラルの使い方をデモするためのユーザースペースツールも
 作成している。下記を参照されたい。
 
-### 質問1
+#### 質問1
 
 - ソースからコンパイルすると、イメージは得られますが、シェルのコマンドラインにたどり着けません。
   1. ツールチェーンのバージョンに関する要件はありますか？ 例: Xuantie-900-gcc-elf-newlib-x86_64-V2.6.1
@@ -129,7 +136,7 @@ usertrap(): unexpected scause 0xd pid=1
 panic: init exiting
 ```
 
-### 回答1
+#### 回答1
 
 以下のパッチを適用
 
@@ -149,6 +156,8 @@ index bf5851b..8c76b7f 100644
          sret
 ```
 
+- 以下のpatchは関係なかったようで適用していない。
+
 ```diff
 diff --git a/kernel/param.h b/kernel/param.h
 index f7757af..eeb7962 100644
@@ -165,8 +174,7 @@ index f7757af..eeb7962 100644
  #define INTERVAL     1000000UL
 ```
 
-
-### # milkv duo用のビルド
+##### milkv duo用のビルド
 
 ```bash
 ./build_for_milkv_duo.sh
@@ -174,7 +182,7 @@ index f7757af..eeb7962 100644
 
 ビルドされたimgは`duo-imgtools/milkv-duo_sdcard.img`である。
 
-### これをPCでtfカードにコピー
+##### これをPCでSDカードにコピー
 
 ```bash
 dd if=milkv-duo_sdcard.img of=/dev/sdX
@@ -182,13 +190,13 @@ dd if=milkv-duo_sdcard.img of=/dev/sdX
 
 "sdX"は実態に合わせて修正する必要がある。
 
-### gpioのデモ
+##### gpioのデモ
 
 ```bash
 $ ./blink 5 //will link 5 loops
 ```
 
-### adcのデモ
+##### adcのデモ
 
 ADC1を使用している。
 
@@ -202,7 +210,7 @@ $ ./adc
 $ adc raw: 4095
 ```
 
-### pwmのデモ
+##### pwmのデモ
 
 デモにはPWM6を使用する。発光ダイオード（適切な抵抗を忘れずに、私は100オームを使っている）の一方を
 GP5に接続し、他端をGNDに接続する。
@@ -219,7 +227,7 @@ $ ./pwm 1000000 100000
 
 など。デューティサイクルを変更するたびにダイオードのライトが変化する。
 
-### i2cのデモ
+#### i2cのデモ
 
 デモにはI2C0を使用する。デモにはmax30102センサを使用した。他のI2Cデバイスを使用する場合は
 デバイスのマニュアルを参照されたい。GP0をSCLピンに、GP1をSDAピンに接続する。GNDとVCC(3V3(out)に接続)の
@@ -237,7 +245,7 @@ $ ./i2c 0x57 0x20
 
 整数温度は15であり、温度のfarcは0x3なので、温度はおおよそ15.19℃である。(詳細は max30102 TRM を参照)
 
-### spiのデモ
+#### spiのデモ
 
 デモにはSPI2を使用する。外部SPIループテストをデモした。これはlinuxのspidev_testに相当する。
 デモでは受信した内容を表示する。
@@ -250,15 +258,15 @@ $ ./spi
 $ 1 2 3 4 5 6 7 8 ...
 ```
 
-### QEMU用のビルド
+#### QEMU用のビルド
 
 ```bash
-git checkout kernel/config.h
+cp kernel/config.h.qemu kernel/config.h
 make
 make kernel/kernel.bin
 ```
 
-### TH1520用のビルド
+#### TH1520用のビルド
 
 ```bash
 cp kernel/config.h.th1520 kernel/config.h
@@ -266,20 +274,20 @@ make
 make kernel/kernel.bin
 ```
 
-### SG200X用のビルド
+#### SG200X用のビルド
 
 fip.binを置き換えて、milkv duoとしてビルドするだけである ;)
 
-## ＃4. BigBrotherJu氏
+### ＃4. BigBrotherJu氏
 
-### imageの作成
+#### imageの作成
 
 ルートディレクトリでsdカードのデバイスファイル名を指定して`./script /dev/sdb`を実行する。
 すると`port/image/output/milkv-duo.img`が作成される。
 
-### ドライバ
+#### ドライバ
 
-#### i2c
+##### i2c
 
 - SoCには5つのi2cコントローラがあり、開発ボードにはコントローラ0、1、3がピン出力されている。
 - ドライバはi2c0-4のいずれか1つを制御する。ioctlでスレーブアドレスを設定し、値を読み書きすることができる。
@@ -287,7 +295,7 @@ fip.binを置き換えて、milkv duoとしてビルドするだけである ;)
 - このテスト例では3軸加速度と角速度を取得するためにジャイロセンサーMPU6050を接続する必要があある
  （データは未処理の生データである）。
 
-#### uart
+##### uart
 
 - SoCには5つのuartコントローラがあり、ボードには5つすべてのコントローラがピン出力されている。
 - uart 0はコンソールに接続されており、駆動されない。
@@ -297,14 +305,14 @@ fip.binを置き換えて、milkv duoとしてビルドするだけである ;)
   シアルポートに出力され、次にシリアルポートから入力する。入力長はテスト例の最初のパラメータによって決定され、
   シリアルポートに入力された文字はシリアルポートに再表示される。
 
-#### adc
+##### adc
 
 - SoCにはadcコントローラが1つあり、ボートにはこのコントローラがピン出力されている。
 - ドライバはこのコントローラの任意のチャネルを制御し、値の読み出すをサポートしている。
 - デモ用のテスト例ではチャンネル 1を駆動している。
 - チャンネル1に3.3Vを入力/キャンセルすることでチャンネル1が読み取るデジタル量の変化を観察することができる。
 
-#### pwm
+##### pwm
 
 - SoCには4つのpwmコントローラがあり、ボードにはコントローラ 1と2がピン出力されている。
 - ドライバは任意の1つのコントローラの任意の1つのチャンネルを制御し、ioctlはチャネルを設定し、有効にする。
@@ -312,7 +320,7 @@ fip.binを置き換えて、milkv duoとしてビルドするだけである ;)
 - このテスト例ではDF9GMS 180マイクロサーボと接続する必要がある。pwm5に異なるデューティを設定することで
   サーボの舵を異なる角度で回転させることができる。
 
-#### gpio
+##### gpio
 
 - SoCには4つのgpioコントローラがあり、ボードには4つのコントローラすべてがピン出力されている。
 - ドライバは任意の1つのコントローラの任意の1つのチャネルを制御し、ioctlは入出力を設定し、値の読み込会を
@@ -321,7 +329,7 @@ fip.binを置き換えて、milkv duoとしてビルドするだけである ;)
 - テスト例ではボードの青色LEDを点滅させ、GP0の入力を10回読み取る。GP0の元の入力は1であり、入力が接地されると
   0になる。
 
-#### spi
+##### spi
 
 - SOCには4つのspiコントローラがあり、開発ボードにはコントローラ2がピン出力されている。
 - ドライバは1つのコントローラを制御し、ioctlはモードと周波数を設定し、リード/ライトを開始する。
@@ -329,14 +337,14 @@ fip.binを置き換えて、milkv duoとしてビルドするだけである ;)
 - テスト例はspiループバックテストであり、spi 2の両データピンをショートする必要がある。 送信された
   データは全く同じように受信される。
 
-### ピンの割り当て
+#### ピンの割り当て
 
 図中の黒枠で囲ったピンがテストで使用するピンであり、ピンは多重化用に設定されており、対応するペリフェラルを
 接続してテストすることができる。
 
 ![ピンの割当](pin_assign.png)
 
-### 例
+#### 例
 
 - 各ドライバのサンプルユーザプログラムは、イメージに含まれている`xxxtest`であり、ボードの電源投入後に
   実行できる。

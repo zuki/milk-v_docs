@@ -16,11 +16,6 @@
 
 4項までがfip.bin。5項のboot.sdはu-bootから実行される。
 
-## セカンドローダ
-
-- u-boot-raw.bin
-- bl33.bin
-
 ## セカンドローダのヘッダー定義
 
 - magicは"BL33`, "B3MA", "B3Z4"のいずれかでないといけない
