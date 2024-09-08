@@ -28,3 +28,7 @@
 - [OpenSBIを使って自作OSを起動する](articles/use_opensbi.md)
 - [milk-v duo純正Linux_SDKコンパイルプロセス](articles/linux_sdk_compile.md)
 - [小型コアでRTOSをブートする - RISC-V C906](articles/boot_rtos_on_c906.md)
+
+## [CV180xデータシート](cv180x/README.md)
+
+- [12.4: SD/SDIOコントローラ](cv180x/sd_sdio.md)
