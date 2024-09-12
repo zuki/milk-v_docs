@@ -30,6 +30,10 @@
       - bbjは使用していない
       - xhackはSBI_TIME_SET_TIMERを使用
       - virusvはSBI_TIME_SET_TIMER, SBI_CONSOLE_PUTCHAR, SBI_CONSOLE_GETCHARを使用
+  6. fs.img (RAMDISK)の持ち方
+      - bbj: `xxd -i`して`kernel/ramdisk.h`として使用
+      - xhack: `kernel/ramdisk_data.S`で`ramdisk`セクションにバイナリインクルード
+      - virusv: boot.sdにramdiskとしてアドレス指定(`RAMDISK`)で埋め込み、アドレス指定して使用
 
 ## 相違点のまとめ
 

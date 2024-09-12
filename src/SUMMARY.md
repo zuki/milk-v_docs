@@ -32,4 +32,7 @@
     - [小型コアでRTOSをブートする - RISC-V C906](articles/boot_rtos_on_c906.md)
 
 - [CV180xデータシート](cv180x/README.md)
+    - [1.5: アドレス空間マッピング](cv180x/address_space.md)
+    - [3.1: リセット](cv180x/reset.md)
+    - [3.2: クロック](cv180x/clock.md)
     - [12.4: SD/SDIOコントローラ](cv180x/sd_sdio.md)
