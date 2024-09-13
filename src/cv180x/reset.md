@@ -59,3 +59,29 @@
 ために1をセットする必要があります。リセットする前にバスへの内蔵DMAアクセスと
 モジュールへのプロセッサアクセスがアイドルであることを確認してください。
 そうしないと、リセットは失敗し、システムのハングアップを引き起こします。
+
+## 3.1.3 リセット制御レジスタ
+
+### 3.1.3.1 リセット制御レジスタ概要
+
+**基底アドレス: 0x0300_3000**
+
+| 名前 | オフセット | 記述 |
+|:---- |-----------:|:-----|
+| SOFT_RSTN_0 | 0x000 | soft-reset ctrl register 0 |
+| SOFT_RSTN_1 | 0x004 | soft-reset ctrl register 1 |
+| SOFT_RSTN_2 | 0x008 | soft-reset ctrl register 2 |
+| SOFT_RSTN_3 | 0x00c | soft-reset ctrl register 3 |
+| SOFT_CPUAC_RSTN | 0x020 | CPU auto clear soft-reset ctrl register |
+| SOFT_CPU_RSTN | 0x024 | CPU soft-reset ctrl register |
+
+### 3.1.3.2 リセット制御レジスタ詳細
+
+いずれのビットもActive LOW
+
+#### SOFT_RSTN_0
+
+| ビット | 名前 | アクセス | 記述 | リセット値 |
+|-------:|:---- |:---------|:-----|:-----------|
+| 16 | reg_soft_reset_x_sd0 | R/W | SD0 IP ソフトリセット | 0x1 |
+| 17 | reg_soft_reset_x_sd1 | R/W | SD1 IP ソフトリセット | 0x1 |

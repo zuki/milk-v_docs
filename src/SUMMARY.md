@@ -35,4 +35,8 @@
     - [1.5: アドレス空間マッピング](cv180x/address_space.md)
     - [3.1: リセット](cv180x/reset.md)
     - [3.2: クロック](cv180x/clock.md)
+    - [3.4: 割り込みシステム](cv180x/interrupt.md)
+    - [3.5: システムコントローラ](cv180x/system_controller.md)
+    - [3.7: タイマー](cv180x/timer.md)
+    - [3.9: リアルタイムクロック](cv180x/rtc.md)
     - [12.4: SD/SDIOコントローラ](cv180x/sd_sdio.md)
