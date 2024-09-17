@@ -40,3 +40,8 @@
     - [3.7: タイマー](cv180x/timer.md)
     - [3.9: リアルタイムクロック](cv180x/rtc.md)
     - [12.4: SD/SDIOコントローラ](cv180x/sd_sdio.md)
+
+- [その他の資料](misc/README.md)
+
+    - [HLICデバイスツリーエントリ](misc/hlic_devtree_entry.md)
+    - [U-Boot MMC関連の関数と構造体](misc/uboot_mmc.md)
