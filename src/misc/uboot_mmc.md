@@ -254,9 +254,49 @@ struct mmc {
     enum bus_mode user_speed_mode; /* input speed mode from user */
 };
 
+struct mmc_config {
+	const char *name;
+	const struct mmc_ops *ops;
+	uint host_caps;             // in sdhci_host
+	uint voltages;              // in sdhci_host
+	uint f_min;                 // in cvi_sdhci_host
+	uint f_max;                 // in cvi_sdhci_host
+	uint b_max;
+	unsigned char part_type;
+};
+
+// ドライブクラス
+struct uclass {
+	void *priv_;                    // プライベートデータ
+	struct uclass_driver *uc_drv;   // このuclassのドライバ
+	struct list_head dev_head;
+	struct list_head sibling_node;
+};
+
+// ドライバのインスタンス
+struct udevice {
+	const struct driver *driver;    // このデバイスが使うドライバ
+	const char *name;
+	void *plat_;            // configデータ
+	void *parent_plat_;     // 親バスのconfigデータ
+	void *uclass_plat_;     // uclassのconfigデータ
+	ulong driver_data;
+	struct udevice *parent; // 親
+	void *priv_;            // プライベートデータ
+	struct uclass *uclass;  // uclassへのポインタ
+	void *uclass_priv_;     // uclassのプライベートデータ
+	void *parent_priv_;     // 親のプライベートデータ
+	struct list_head uclass_node;
+	struct list_head child_head;
+	struct list_head sibling_node;
+	u32 flags_;
+	int seq_;
+	ulong dma_offset;
+};
+
 struct sdhci_host {
     const char *name;
-    void *ioaddr;
+    void *ioaddr;           // MMIOベースアドレス
     unsigned int quirks;
     unsigned int host_caps;
     unsigned int version;
@@ -267,22 +307,18 @@ struct sdhci_host {
     const struct sdhci_ops *ops;
     int index;
 
-    int bus_width;
-    struct gpio_desc pwr_gpio;    /* Power GPIO */
-    struct gpio_desc cd_gpio;        /* Card Detect GPIO */
+    int bus_width;                  // バス幅
+    struct gpio_desc pwr_gpio;      // 電源GPIO
+    struct gpio_desc cd_gpio;       // カード検出GPIO
 
-    uint    voltages;
+    uint    voltages;               // 電源電圧
 
     struct mmc_config cfg;
+    // DMA用
     void *align_buffer;
     bool force_align_buffer;
     dma_addr_t start_addr;
     int flags;
-#define USE_SDMA    (0x1 << 0)
-#define USE_ADMA    (0x1 << 1)
-#define USE_ADMA64    (0x1 << 2)
-#define USE_DMA        (USE_SDMA | USE_ADMA | USE_ADMA64)
-    dma_addr_t adma_addr;
 };
 
 struct cvi_sdhci_plat {
