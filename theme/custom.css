@@ -52,3 +52,7 @@ hr.note::before {
     font-weight: bold;
     background-color: #FFF;
 }
+
+table.tbl-cv180x {
+    table-layout: fixed;
+}

@@ -111,3 +111,33 @@ emmc_issue_command_int
 1. sdhci.c#sdhci_reset(): cmd/data両lineのソフトリセット
 2. sdhci_cv180x.c#cvi_general_reset()
 	1. UHS_MODE_SELに合わせた処理
+
+# linuxのmmc
+
+- `drivers/mmc/host/cvitek/sdhci-cv180x.c`
+
+```bash
+$ egrep "^static" sdhci-cv180x.c
+static char *cvi_get_card_type(unsigned int sd_type)
+static inline int is_card_uhs(unsigned char timing)
+static inline int is_card_hs(unsigned char timing)
+static void sdhci_cv180x_sd_setup_pad(struct sdhci_host *host, bool bunplug)
+static void sdhci_cv180x_sd_setup_io(struct sdhci_host *host, bool reset)
+static void sdhci_cvi_reset_helper(struct sdhci_host *host, u8 mask)
+static void reset_after_tuning_pass(struct sdhci_host *host)
+static inline uint32_t CHECK_MASK_BIT(void *_mask, uint32_t bit)
+static inline void SET_MASK_BIT(void *_mask, uint32_t bit)
+static int sdhci_cv180x_general_select_drive_strength(struct sdhci_host *host, struct mmc_card *card, unsigned int max_dtr, int host_drv, int card_drv, int *drv_type)
+static void sdhci_cvi_general_set_uhs_signaling(struct sdhci_host *host, unsigned int uhs)
+static unsigned int sdhci_cvi_general_get_max_clock(struct sdhci_host *host)
+static void sdhci_cvi_cv180x_set_tap(struct sdhci_host *host, unsigned int tap)
+static int sdhci_cv180x_general_execute_tuning(struct sdhci_host *host, u32 opcode)
+static void sdhci_cv180x_sd_reset(struct sdhci_host *host, u8 mask)
+static void sdhci_cv180x_sd_set_power(struct sdhci_host *host, unsigned char mode, unsigned short vdd)
+static void sdhci_cv180x_sd_dump_vendor_regs(struct sdhci_host *host)
+static void cvi_adma_write_desc(struct sdhci_host *host, void **desc, dma_addr_t addr, int len, unsigned int cmd)
+static unsigned long sdhci_get_time_ms(void)
+static void sdhci_cvi_cd_debounce_work(struct work_struct *work)
+static irqreturn_t sdhci_cvi_cd_handler(int irq, void *dev_id)
+static int sdhci_cvi_probe(struct platform_device *pdev)
+static int sdhci_cvi_remove(struct platform_device *pdev)

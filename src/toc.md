@@ -29,16 +29,25 @@
 - [milk-v duo純正Linux_SDKコンパイルプロセス](articles/linux_sdk_compile.md)
 - [小型コアでRTOSをブートする - RISC-V C906](articles/boot_rtos_on_c906.md)
 
-## [CV180xデータシート](cv180x/README.md)
+## [CV180x](cv180x/README.md)
 
-- [1.5: アドレス空間マッピング](cv180x/address_space.md)
-- [3.1: リセット](cv180x/reset.md)
-- [3.2: クロック](cv180x/clock.md)
-- [3.4: 割り込みシステム](cv180x/interrupt.md)
-- [3.5: システムコントローラ](cv180x/system_controller.md)
-- [3.7: タイマー](cv180x/timer.md)
-- [3.9: リアルタイムクロック](cv180x/rtc.md)
-- [12.4: SD/SDIOコントローラ](cv180x/sd_sdio.md)
+-[データシート](cv180x/datasheet/README.md)
+    - [1.5: アドレス空間マッピング](cv180x/datasheet/address_space.md)
+    - [3.1: リセット](cv180x/datasheet/reset.md)
+    - [3.2: クロック](cv180x/datasheet/clock.md)
+    - [3.4: 割り込みシステム](cv180x/datasheet/interrupt.md)
+    - [3.5: システムコントローラ](cv180x/datasheet/system_controller.md)
+    - [3.7: タイマー](cv180x/datasheet/timer.md)
+    - [3.9: リアルタイムクロック](cv180x/datasheet/rtc.md)
+    - [12.4: SD/SDIOコントローラ](cv180x/datasheet/sd_sdio.md)
+- [Pinout](cv180x/pinout/README.md)
+    - [1. SD0関係レジスタ一覧](cv180x/pinout/table_0.md)
+    - [2. SD0機能選択レジスタ](cv180x/pinout/table_1.md)
+    - [3. SD0制御レジスタ](cv180x/pinout/table_3.md)
+    - [4. SD0デフォルト値](cv180x/pinout/table_4.md)
+
+### CV180xb-Pinout-v1
+- [1. ピン情報](cv180x/pinout/table_1.md)
 
  [その他の資料](misc/README.md)
 
