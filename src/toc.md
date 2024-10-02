@@ -31,7 +31,7 @@
 
 ## [CV180x](cv180x/README.md)
 
--[データシート](cv180x/datasheet/README.md)
+- [データシート](cv180x/datasheet/README.md)
     - [1.5: アドレス空間マッピング](cv180x/datasheet/address_space.md)
     - [3.1: リセット](cv180x/datasheet/reset.md)
     - [3.2: クロック](cv180x/datasheet/clock.md)
@@ -46,10 +46,8 @@
     - [3. SD0制御レジスタ](cv180x/pinout/table_3.md)
     - [4. SD0デフォルト値](cv180x/pinout/table_4.md)
 
-### CV180xb-Pinout-v1
-- [1. ピン情報](cv180x/pinout/table_1.md)
 
- [その他の資料](misc/README.md)
+## [その他の資料](misc/README.md)
 
 - [HLICデバイスツリーエントリ](misc/hlic_devtree_entry.md)
 - [U-Boot MMC関連の関数と構造体](misc/uboot_mmc.md)
