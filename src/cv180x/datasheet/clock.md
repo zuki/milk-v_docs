@@ -113,9 +113,9 @@ RTC_XINはRTCの基準クロックであり、32.768KHzの水晶振動子を接�
 
 1. IPクロックをオフにします。クロックをオフにできない場合は、まず安定した
    クロックに構成する必要があります。
-        - CPU周波数のスケーリング: 低すぎる周波数を避けるためにclk_sel_0を
-          構成してSRC1に切り替えます。
-        - IP周波数のスケーリング: clk_byp_0/1を構成してクロックをXTALに切り替えます。
+      - CPU周波数のスケーリング: 低すぎる周波数を避けるためにclk_sel_0を
+        構成してSRC1に切り替えます。
+      - IP周波数のスケーリング: clk_byp_0/1を構成してクロックをXTALに切り替えます。
 2. クロックソースと分周器を構成して調整します。
 3. 分周器レジスタのbit[2]を構成して、クロック分周器の構成を有効にします。
 4. 構成したクロック分周器をクロックソースに設定します。
@@ -179,3 +179,26 @@ RTC_XINはRTCの基準クロックであり、32.768KHzの水晶振動子を接�
 | tpll_ssc_syn_set | 0x074 |  tpll synthesizer set register  |
 | tpll_ssc_syn_span | 0x078 |  tpll synthesizer span register  |
 | tpll_ssc_syn_step | 0x07c |  tpll synthesizer step register  |
+
+## 3.2.7 PLL CRGレジスタの概要
+
+
+## 3.2.8 CLK_DIV CRGレジスタの概要
+
+**基底アドレス: 0x0300_2000**
+
+| 名前 | オフセット | 記述 |
+|:---- |-----------:|:-----|
+| div_clk_sd0 | 0x070 | divider register of clk_sd0 |
+
+
+#### `div_clk_sd0`
+
+| ビット | 説明 |
+|:-------|:-----|
+| [0] | 分周器リセット盛業<br/> 0: assert reset<br/> 1: de-assert reset |
+| [3] | 分周ファクタ選択<br/> 0: 初期値<br/> 1: このレジスタ値 |
+| [9:8] | クロックソース<br/> 0: fpll<br/> 1: dsppll |
+| [20:16] | クロック分周ファクタ |
+
+- **リセット値**: 0x00000001
