@@ -695,7 +695,7 @@ SBI HSM extension detected
 [0]emmc_card_init: CVI_SDHCI_PHY_TX_RX_DLY: 0x01000100
 [0]emmc_card_init: CVI_SDHCI_PHY_CONFIG   : 0x00000001
 [0]emmc_card_init: hci_ver: 5
-[0]emmc_read: nblock: 0x0, ull_offset: 0x0
+[0]emmc_read: nblock: 0x0, offset: 0x0
 [0]emmc_dump_host_ctl1: HOST_CTL1
 [0]emmc_dump_host_ctl1:  lec_ctl              : 0
 [0]emmc_dump_host_ctl1:  dat_xfer_width       : 0
@@ -742,7 +742,7 @@ SBI HSM extension detected
 [0]emmc_issue_command: emmc_issue_command: cmd=8, arg=0x000001aa
 [0]emmc_issue_command: cmd: 8 (0x000001aa), result: success
 [0]emmc_dump_mmc: struct mmc
-[0]emmc_dump_mmc:  ull_offset            : 0
+[0]emmc_dump_mmc:  offset            : 0
 [0]emmc_dump_mmc:  hci_ver               : 5
 [0]emmc_dump_mmc:  device_id             : [0, 0, 0, 0]
 [0]emmc_dump_mmc:  card_supports_sdhc    : 0
@@ -814,8 +814,10 @@ SBI HSM extension detected
 [0]emmc_dump_clk_ctl:  sw_rst_dat    : 1
 [0]emmc_issue_command: emmc_issue_command: cmd=2, arg=0x00000000
 [0]emmc_issue_command: cmd: 2 (0x00000000), result: success
+[0]emmc_card_reset: card CID: 0x00275048, 0x53443332, 0x47607856x, 0x598c0168x
 [0]emmc_issue_command: emmc_issue_command: cmd=3, arg=0x00000000
 [0]emmc_issue_command: cmd: 3 (0x00000000), result: success
+[0]emmc_card_reset: RCA: 0x1
 [0]emmc_issue_command: emmc_issue_command: cmd=7, arg=0x00010000
 [0]emmc_issue_command: cmd: 7 (0x00010000), result: success
 [0]emmc_issue_command: emmc_issue_command: cmd=51, arg=0x00000000
@@ -823,9 +825,6 @@ SBI HSM extension detected
 [0]emmc_issue_command: cmd: 55 (0x00010000), result: success
 [0]emmc_issue_command_int: block transfer complete
 [0]emmc_issue_command: cmd: 51 (0x00000000), result: success
-[0]emmc_card_reset: scr[0]: 0b1000_0010_1000_0000_1000_0101_0000_0010
-[0]emmc_card_reset: scr[1]: 0b0000_0000_0000_0000_0000_0000_0000_0000
-[0]emmc_card_reset: scr0: 0b0000_0010_1000_0101_1000_0000_1000_0010
 [0]emmc_card_reset: SCR: version 3.0x, bus_width 5
 [0]emmc_issue_command: emmc_issue_command: cmd=6, arg=0x00fffff0
 [0]emmc_issue_command_int: block transfer complete
@@ -845,10 +844,12 @@ SBI HSM extension detected
 [0]emmc_dump_clk_ctl:  sw_rst_all    : 0
 [0]emmc_dump_clk_ctl:  sw_rst_cmd    : 0
 [0]emmc_dump_clk_ctl:  sw_rst_dat    : 1
+[0]emmc_card_reset: switch to 50MHz clock complete
 [0]emmc_issue_command: emmc_issue_command: cmd=6, arg=0x00000002
 [0]emmc_issue_command: issuing command ACMD6
 [0]emmc_issue_command: cmd: 55 (0x00010000), result: success
 [0]emmc_issue_command: cmd: 6 (0x00000002), result: success
+[0]emmc_card_reset: switch to 4-bit complete
 [0]emmc_card_reset: found valid version 3.0x SD card
 [0]emmc_issue_command: emmc_issue_command: cmd=13, arg=0x00010000
 [0]emmc_issue_command: cmd: 13 (0x00010000), result: success
@@ -891,7 +892,7 @@ SBI HSM extension detected
 000001f0: 0000 0000 0000 0000 0000 0000 0000 55aa
 00000200: eb3c 906d 6b66 732e 6661 7400 0204 0400
 00000210: 0200 0200 00f8 8000 2000 0800 0000 0000
-00000220: 0000 0200 8000 29ef d82b 004e 4f20 4e41
+00000220: 0000 0200 8000 2965 d08e 194e 4f20 4e41
 00000230: 4d45 2020 2020 4641 5431 3620 2020 0e1f
 00000240: be5b 7cac 22c0 740b 56b4 0ebb 0700 cd10
 00000250: 5eeb f032 e4cd 16cd 19eb fe54 6869 7320
@@ -924,6 +925,7 @@ SBI HSM extension detected
 partition[0]: TYPE: 12, LBA = 0x1, #SECS = 0x20000
 sd_init ok
 init: starting sh
+
 $ ls
 .              1 1 1024
 ..             1 1 1024
