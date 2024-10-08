@@ -52,3 +52,7 @@
     - [HLICデバイスツリーエントリ](misc/hlic_devtree_entry.md)
     - [U-Boot MMC関連の関数と構造体](misc/uboot_mmc.md)
     - [emmc.cとmmc.cの比較](misc/emmc.md)
+
+- [xv6実装時のメモ](xv6/README.md)
+
+    - [SDカードを使えるようにする](xv6/sdcard.md)

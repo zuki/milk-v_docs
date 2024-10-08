@@ -253,3 +253,53 @@ static const struct mmc_bus_ops mmc_ops = {
     .hw_reset        = _mmc_hw_reset,
 };
 ```
+
+# 最新版u-bootのmmcドライバの初期化手順
+
+1. cv1800b_sdhciのprobe
+    1. devtreeからstruct mmc_configをセット: mmc_of_parse
+    2. レジスタからstruct mmc_config, struct sdhci_hostをセット: sdhci_setup_cfg
+2. sdhciのprobe
+    1. sdhciの初期化: sdhci_init
+        1. CMD/DATラインのリセット: sdhci_reset
+        2. Bus PowerをON: sdhci_set_power
+        3. CD挿入のチェック: sdhci_get_cd
+        4. SDコントローラ割り込みの有効化
+        5. SD割り込み信号をすべてマスク
+
+## mmcの初期化
+
+!. mmcデバイスの初期化: mmc_init_device, mmc_init
+    1. struct udeviceの取得
+    2. struct mmcの取得
+2. mmcの初期化を開始: mmc_start_init
+    1. 1bitバス幅、MMC_LEGACYをmmc->host_capsにセット(最低共通条件)
+    2. mmc_get_op_cond: mmc->init_in_progress = 1
+        1. クロックを停止: mmc_power_cycle/mmc_power_off/mmc_set_clock
+        2. ホストを初期状態に置く: mmc_set_initial_state
+            1. 信号電圧を設定: mmc_set_signal_voltage
+            2. モード選択: mmc_select_mode
+            3. バス幅の設定: mmc_set_bus_width
+            4. clockを0で有効に: mmc_set_clock
+        3. カードをリセット(idle状態へ移行): mmc_go_idle : CMD0を送信
+        4. SDバージョン2かチェックする: mmc_send_if_cond : CMD8を送信
+        5. OCR（動作条件）を取得: mmc->high_capacityをセット: ACMD41を送信
+3. mmcの初期化を完了させる: mmc_complete_init
+    1. mmcを開始する: mmc_startup : mmc->has_init = 1
+        1. CIDを取得して、カードをIdentifyモードに移行させる: CMD2を送信, mmc->cidをセット
+        2. カードのRCAを取得: CMD3を送信 : mmc->rcaをセット
+        3. カード固有データを取得: CMD9を送信
+            1. mmc->legacy_speedをセット
+            2. LEGACYモードを選択: mmc_select_mode(mmc, 0)
+            3. mmc->dsr_imp, mmc->read_bl_len, mmc->write_bl_len, mmc->capacity_*をセット
+        4. mmc->dsr_imp != -1, DSRをセット : CMD4を送信
+        5. カードを選択して、Transferモードに移行 : CMD7を送信
+        6. mmc->erase_grp_size, mmc->part_configをセットしてMMC ver4機能の処理を開始: mmc_startup_v4
+            1. mmc->version < MMC_VERSION_4 の場合は何もしない (今はMMC_VERSION_2)
+        7. mmc->capacityとパーティションのlbaをセット: mmc_set_capacity
+        8. SCRを取得してカードのcapをセット: sd_get_capabilities : ACMD51を送信
+            1. mmc->version, mmc->card_caps（バス幅）をセット
+            2. 周波数を切り替える: sd_switch
+            3. UHSサポート状況をmmc->card_capsにセット
+        9. モードとバス幅を選択する: sd_select_mode_and_width
+            1. mmc->best_mode, device_descをセット
