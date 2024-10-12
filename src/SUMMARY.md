@@ -55,4 +55,6 @@
 
 - [xv6実装時のメモ](xv6/README.md)
 
+    - [XV6メモリレイアウト](xv6/memlayout.md)
     - [SDカードを使えるようにする](xv6/sdcard.md)
+    - [Pageシステム (BuddyとSlab) を導入する](xv6/page.md)
