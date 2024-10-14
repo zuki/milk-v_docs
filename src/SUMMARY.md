@@ -58,3 +58,4 @@
     - [XV6メモリレイアウト](xv6/memlayout.md)
     - [SDカードを使えるようにする](xv6/sdcard.md)
     - [Pageシステム (BuddyとSlab) を導入する](xv6/page.md)
+    - [計時機能を付ける](xv6/time.md)
