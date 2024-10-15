@@ -49,7 +49,10 @@
 
 ## [その他の資料](misc/README.md)
 
-- [HLICデバイスツリーエントリ](misc/hlic_devtree_entry.md)
+- [デバイス割り込み情報の指定](misc/interrupts.md)
+- [RISC-V PLIC bindings](misc/riscv_plic0.md)
+    - [SiFive PLIC bindings](misc/sifive_plic-1_0_0.md)
+- [HLIC bindings](misc/hlic_devtree_entry.md)
 - [U-Boot MMC関連の関数と構造体](misc/uboot_mmc.md)
 - [emmc.cとmmc.cの比較](misc/emmc.md)
 

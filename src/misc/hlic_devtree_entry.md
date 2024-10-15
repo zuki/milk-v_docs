@@ -1,5 +1,7 @@
 # RISC-V Hart-Level Interrupt Controller (HLIC)のためのデバイスツリーエントリ
 
+オリジナル: `linux-sources/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt`
+
 RISC-Vコアには各CPUコア（RISC-V用語ではHART）にローカルなソフトウェアで
 読み書きできる制御・状態レジスタ (CSR: Control Status Register)が含まれて
 います。これらのCSRの中にはコアに接続されているローカル割り込みの制御に
@@ -14,7 +16,7 @@ RISC-VスーパバイザISAマニュアルではすべてのHLICに接続され�
 外部割り込みは他のすべてのデバイス割り込みをHLICに接続し、PLC (Platform-Lebel
 Interrupt Controller)を介してルーティングされます。
 
-スーパ０バイザISA仕様に準拠するすべてのRISC-Vシステムにはこれら3つの割り込み
+スーパバイザISA仕様に準拠するすべてのRISC-Vシステムにはこれら3つの割り込み
 ソースを持つHLICが必要とされます。割り込みマップはISAによって定義されるため、
 HLICのデバイスツリーエントリにはリストされませんが（たとえばPLICなどの）外部
 割り込みコントローラはその割り込みがどのように関連するHLICにマップされるかを
