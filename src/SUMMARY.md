@@ -60,6 +60,9 @@
 
     - [XV6メモリレイアウト](xv6/memlayout.md)
     - [SDカードを使えるようにする](xv6/sdcard.md)
+    - [V6 FSをSD上に作成](xv6/v6fs.md)
     - [Pageシステム (BuddyとSlab) を導入する](xv6/page.md)
     - [計時機能を付ける](xv6/time.md)
     - [ext2ファイルシステムを作成](xv6/ext2.md)
+    - [userコマンドのビルドライブラリにmuslを使用する](xv6/musl.md)
+    - [errnoが設定されるエラーになる件](xv6/errno.md)
