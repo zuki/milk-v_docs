@@ -47,6 +47,16 @@
         - [3. SD0制御レジスタ](cv180x/pinout/table_3.md)
         - [4. SD0デフォルト値](cv180x/pinout/table_4.md)
 
+- [SDカード短縮版仕様書](sdcard/README.md)
+    - [パート1: 物理層. ver. 3.01](sdcard/part_1/README.md)
+        - [第1章 概要](sdcard/part_1/chap_1.md)
+        - [第2章 システム機能](sdcard/part_1/chap_2.md)
+        - [第3章 SDメモリカードシステムのコンセプト](sdcard/part_1/chap_3.md)
+        - [第4章 機能概要](sdcard/part_1/chap_4.md)
+        - [第5章 SDカードレジスタ](sdcard/part_1/chap_5.md)
+    - [パートA2: SDホストコントローラ ver. 3.00](sdcard/part_a2/README.md)
+        - [第1章 概要](sdcard/part_a2/chap_1.md)
+
 - [その他の資料](misc/README.md)
 
     - [デバイス割り込み情報の指定](misc/interrupts.md)
